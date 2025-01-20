@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@vant/area-data": "^2.0.0",
     "axios": "^1.7.8",
     "core-js": "^3.8.3",
     "express": "^4.21.1",
@@ -56,11 +57,6 @@
     "last 2 versions",
     "not dead"
   ],
-    "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.{js,vue}": [
       "eslint --fix",

@@ -28,7 +28,6 @@
     <van-card
       v-for="item in goodsList"
       :key="item.id"
-      :num="item.num"
       :price="item.price"
       :desc="item.description"
       :title="item.name"
@@ -37,7 +36,7 @@
     >
      
       <template #footer>
-        <van-button size="normal">加入购物车</van-button>
+        <van-button @click="onClickButton(item.id)" size="normal">加入购物车</van-button>
       </template>
     </van-card>
     <van-empty description="商品已售罄" v-if="goodsList.length === 0" />
@@ -50,7 +49,9 @@ import header from '@/components/search/header';
 import Tabbar from '@/components/common/Tabbar.vue';
 import { getHomeTab, getShowGoods } from '@/api/home';
 import { getGoodsSearch } from '@/api/home';
+import { getGoodsDetail, addGoodsCart } from '@/api/home';
 import { Lazyload } from 'vant';
+import { Dialog,Toast } from 'vant';
 export default {
   data() {
     return {
@@ -86,6 +87,23 @@ export default {
 
   },
   methods: {
+    onClickButton(id) {
+      Dialog.confirm({
+        message: '您确定要加入购物车吗？',
+      })
+        .then(() => {
+          addGoodsCart({
+            goodsId: id,
+          }).then((res) => {
+            Toast.success('添加成功');
+          });
+        }).catch(() => {
+          
+        })
+        .catch(() => {
+          // on cancel
+        });
+    },
     //获取搜索列表
     async getGoodsSearch() {
       await getGoodsSearch({keyword: this.searchInput}).then((res) => {

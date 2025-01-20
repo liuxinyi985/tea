@@ -69,7 +69,7 @@ export default {
   created() {
     this.LoadingFlag = false;
     getShowGoods().then((res) => {
-      this.imgList = res.data;
+      this.imgList = res.data.slice(0, 4);
     });
     this.LoadingFlag = true;
   },

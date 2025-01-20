@@ -31,6 +31,7 @@ export default {
             state.loginStatus = false;
             state.userInfo = {};
             localStorage.removeItem('userInfo');
+            localStorage.removeItem('token');
         }
     }
 }

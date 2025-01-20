@@ -13,7 +13,7 @@
       <van-button v-else type="warning" @click="login">登录/注册</van-button>
     </div>
     <section>
-      <van-cell title="地址列表" is-link />
+      <van-cell title="地址列表" @click="goAddress"  is-link />
       <van-cell title="退出登录" @click="loginOut" is-link />
     </section>
     <Tabbar></Tabbar>
@@ -38,6 +38,9 @@ export default {
     }),
   },
   methods: {
+    goAddress() {
+      this.$router.push('/address');
+    },
     login() {
       this.$router.push('/login');
     },

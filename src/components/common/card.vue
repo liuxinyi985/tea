@@ -46,8 +46,7 @@ export default {
   },
   created() {
     getShowGoods().then((res) => {
-      this.cardList = res.data;
-      console.log(res.data);
+      this.cardList = res.data.slice(0, 4);
     });
   },
 };
