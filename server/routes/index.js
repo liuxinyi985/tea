@@ -224,10 +224,10 @@ router.post('/api/addCart', function (req, res, next) {
               //用户之前是添加过商品到购物车
               if (r.length > 0) {
                 console.log(r, 'r');
-                
+
                 let num = r[0].goods_num;
                 console.log(num, 'num');
-                
+
                 connection.query(
                   `update goods_cart set goods_num = replace(goods_num,${num},${
                     parseInt(num) + 1
@@ -297,45 +297,43 @@ router.post('/api/selectCart', function (req, res, next) {
 // 删除购物车数据
 router.post('/api/deleteCart', function (req, res, next) {
   let arrId = req.body.arrId;
-console.log(arrId,'arrId');
+  console.log(arrId, 'arrId');
 
-
-    connection.query(
-      `delete from goods_cart where id = ${arrId}`,
-      function (error, results) {
-        res.send({
-          data: {
-            code: 200,
-            success: true,
-            msg: '删除成功',
-          },
-        });
-      }
-    );
-  
+  connection.query(
+    `delete from goods_cart where id = ${arrId}`,
+    function (error, results) {
+      res.send({
+        data: {
+          code: 200,
+          success: true,
+          msg: '删除成功',
+        },
+      });
+    }
+  );
 });
 //修改购物车数量
-router.post('/api/updateNum',function(req,res,next){
-    
-    let id = req.body.id;
-    let changeNum = req.body.num;
-    
-    connection.query(`select * from goods_cart where id = ${id}`,function(error,results){
-        connection.query(
-          `update goods_cart set goods_num = ${changeNum} where id = ${id}`,
-          function (err, result) {
-            res.send({
-              data: {
-                code: 200,
-                success: true,
-              },
-            });
-          }
-        );
-        
-    })
-    
-})
+router.post('/api/updateNum', function (req, res, next) {
+  let id = req.body.id;
+  let changeNum = req.body.num;
+
+  connection.query(
+    `select * from goods_cart where id = ${id}`,
+    function (error, results) {
+      connection.query(
+        `update goods_cart set goods_num = ${changeNum} where id = ${id}`,
+        function (err, result) {
+          res.send({
+            data: {
+              code: 200,
+              success: true,
+            },
+          });
+        }
+      );
+    }
+  );
+});
 // 登录
 router.post('/api/login', function (req, res, next) {
   //后端要接收前端传递过来的值
@@ -410,6 +408,238 @@ router.post('/api/register', function (req, res, next) {
             },
           });
         });
+      }
+    }
+  );
+});
+//修改收货地址
+router.post('/api/updateAddress', function (req, res, next) {
+  //token
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  let tokenObj = jwt.decode(token);
+  //拿到前端给后端传入的数据
+  let body = req.body;
+  let [
+    id,
+    name,
+    tel,
+    province,
+    city,
+    county,
+    addressDetail,
+    isDefault,
+    areaCode,
+  ] = [
+    body.id,
+    body.name,
+    body.tel,
+    body.province,
+    body.city,
+    body.county,
+    body.addressDetail,
+    body.isDefault,
+    body.areaCode,
+  ];
+  //查询用户
+  connection.query(
+    `select * from user where userTel = ${tokenObj.tel}`,
+    function (error, results) {
+      //用户id
+      let uId = results[0].id;
+      //对应查询到0 或者 1 有没有默认收货地址
+      connection.query(
+        `select * from address where uId = ${uId} and isDefault = ${isDefault}`,
+        function (err, result) {
+          if (result.length > 0) {
+            let addressId = result[0].id;
+            console.log(addressId, 'addressId');
+            connection.query(
+              `update address isDefault = replace(isDefault,'1','0') where id = ${addressId}`,
+              function (e, r) {
+                let updateSql = `update address set uId = ? , name = ? , tel = ? , province = ? , city = ? ,county = ? , addressDetail = ? , isDefault = ? , areaCode = ? where id = ${id}`;
+                connection.query(
+                  updateSql,
+                  [
+                    uId,
+                    name,
+                    tel,
+                    province,
+                    city,
+                    county,
+                    addressDetail,
+                    isDefault,
+                    areaCode,
+                  ],
+                  function (errors, datas) {
+                    res.send({
+                      data: {
+                        code: 200,
+                        success: true,
+                        msg: '修改成功',
+                      },
+                    });
+                  }
+                );
+              }
+            );
+          } else {
+            let updateSql = `update address set uId = ? , name = ? , tel = ? , province = ? , city = ? ,county = ? , addressDetail = ? , isDefault = ? , areaCode = ? where id = ${id}`;
+            connection.query(
+              updateSql,
+              [
+                uId,
+                name,
+                tel,
+                province,
+                city,
+                county,
+                addressDetail,
+                isDefault,
+                areaCode,
+              ],
+              function (errors, datas) {
+                res.send({
+                  data: {
+                    code: 200,
+                    success: true,
+                    msg: '修改成功',
+                  },
+                });
+              }
+            );
+          }
+        }
+      );
+    }
+  );
+});
+//查询收货地址
+router.post('/api/selectAddress', function (req, res, next) {
+  //token
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  let tokenObj = jwt.decode(token);
+
+  //查询用户
+  connection.query(
+    `select * from user where userTel = ${tokenObj.tel}`,
+    function (error, results) {
+      //用户id
+      let uId = results[0].id;
+      connection.query(
+        `select * from address where uId = ${uId}`,
+        function (err, result) {
+          res.send({
+            data: {
+              code: 200,
+              success: true,
+              msg: '查询成功',
+              data: result,
+            },
+          });
+        }
+      );
+    }
+  );
+});
+//删除收货地址
+router.post('/api/deleteAddress',function(req,res,next){
+    let id = req.body.id;
+    connection.query(`delete from address where id = ${id}`,function(error,results){
+        res.send({
+            data:{
+                code:200,
+                success:true,
+                msg:'删除成功'
+            }
+        })
+    })
+})
+//新增收货地址
+router.post('/api/addAddress', function (req, res, next) {
+  //token
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  let tokenObj = jwt.decode(token);
+  //拿到前端给后端传入的数据
+  let body = req.body;
+  let [name, tel, province, city, county, addressDetail, isDefault, areaCode] =
+    [
+      body.name,
+      body.tel,
+      body.province,
+      body.city,
+      body.county,
+      body.addressDetail,
+      body.isDefault,
+      body.areaCode,
+    ];
+  console.log(body, 'body');
+  console.log(tokenObj, 'tokenObj');
+
+  //查询用户
+  connection.query(
+    `select * from user where userTel = ${tokenObj.tel}`,
+    function (error, results) {
+      console.log(1111);
+
+      console.log(results, 'results');
+      //用户id
+      let uId = results[0].id;
+      //增加一条收货地址
+      if (isDefault != 1) {
+        connection.query(
+          `insert into address (uId,name,tel,province,city,county,addressDetail,isDefault,areaCode) values (${uId},"${name}","${tel}","${province}","${city}","${county}","${addressDetail}","${isDefault}","${areaCode}")`,
+          function (err, result) {
+            res.send({
+              data: {
+                code: 200,
+                success: true,
+                msg: '收货地址添加成功',
+              },
+            });
+          }
+        );
+      } else {
+        connection.query(
+          `select * from address where uId = ${uId} and isDefault = ${isDefault}`,
+          function (err, result) {
+            if (result.length > 0) {
+              let addressId = result[0].id;
+              connection.query(
+                `update address set isDefault = replace(isDefault,'1','0') where id = ${addressId}`,
+                function () {
+                  connection.query(
+                    `insert into address (uId,name,tel,province,city,county,addressDetail,isDefault,areaCode) values (${uId},"${name}","${tel}","${province}","${city}","${county}","${addressDetail}","${isDefault}","${areaCode}")`,
+                    function (e, r) {
+                      res.send({
+                        data: {
+                          code: 200,
+                          success: true,
+                          msg: '收货地址添加成功',
+                        },
+                      });
+                    }
+                  );
+                }
+              );
+            } else {
+              connection.query(
+                `insert into address (uId,name,tel,province,city,county,addressDetail,isDefault,areaCode) values (${uId},"${name}","${tel}","${province}","${city}","${county}","${addressDetail}","${isDefault}","${areaCode}")`,
+                function (err, result) {
+                  res.send({
+                    data: {
+                      code: 200,
+                      success: true,
+                      msg: '收货地址添加成功',
+                    },
+                  });
+                }
+              );
+            }
+          }
+        );
       }
     }
   );
