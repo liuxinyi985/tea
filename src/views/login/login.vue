@@ -97,7 +97,7 @@
         <span> 密码登录 </span>
       </div>
     </div>
-    <Tabbar></Tabbar>
+    <!-- <Tabbar></Tabbar> -->
   </div>
 </template>
 

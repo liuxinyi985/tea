@@ -544,18 +544,21 @@ router.post('/api/selectAddress', function (req, res, next) {
   );
 });
 //删除收货地址
-router.post('/api/deleteAddress',function(req,res,next){
-    let id = req.body.id;
-    connection.query(`delete from address where id = ${id}`,function(error,results){
-        res.send({
-            data:{
-                code:200,
-                success:true,
-                msg:'删除成功'
-            }
-        })
-    })
-})
+router.post('/api/deleteAddress', function (req, res, next) {
+  let id = req.body.id;
+  connection.query(
+    `delete from address where id = ${id}`,
+    function (error, results) {
+      res.send({
+        data: {
+          code: 200,
+          success: true,
+          msg: '删除成功',
+        },
+      });
+    }
+  );
+});
 //新增收货地址
 router.post('/api/addAddress', function (req, res, next) {
   //token
@@ -641,6 +644,22 @@ router.post('/api/addAddress', function (req, res, next) {
           }
         );
       }
+    }
+  );
+});
+// 根据ID获取地址详情
+router.post('/api/getAddressById', function (req, res, next) {
+  let id = req.body.id;
+  connection.query(
+    `select * from address where id = ${id}`,
+    function (error, results) {
+      res.send({
+        data: {
+          code: 200,
+          success: true,
+          data: results[0],
+        },
+      });
     }
   );
 });

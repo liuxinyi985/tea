@@ -31,10 +31,10 @@
           </template> </van-card
       ></van-checkbox>
     </van-checkbox-group>
- <van-empty description="购物车已清空" v-if="cartList.length === 0" />
+    <van-empty description="购物车已清空" v-if="cartList.length === 0" />
     <van-submit-bar
       :price="totalPrice * 100"
-      button-text="提交订单"
+      button-text="去结算"
       @submit="onSubmit"
     >
       <van-checkbox v-model="checked" @click="checkedAll">全选</van-checkbox>
@@ -44,7 +44,7 @@
 
 <script>
 import Tabbar from '../components/common/Tabbar.vue';
-import { getGoodsCart, deleteGoodsCart,updateGoodsCart } from '@/api/home';
+import { getGoodsCart, deleteGoodsCart, updateGoodsCart } from '@/api/home';
 import { Dialog } from 'vant';
 import { Toast } from 'vant';
 export default {
@@ -71,14 +71,13 @@ export default {
         message: '您确定要删除该商品吗？',
       })
         .then(() => {
-           deleteGoodsCart({ arrId: id })
+          deleteGoodsCart({ arrId: id })
             .then((res) => {
               this.getGoodsCart();
               Toast.success('删除成功');
             })
-            .catch(() => {})
-        }
-        )
+            .catch(() => {});
+        })
         .catch(() => {
           // on cancel
         });
@@ -88,20 +87,29 @@ export default {
       this.computedTotalPrice();
       updateGoodsCart({ id: item.id, num: item.goods_num }).then((res) => {
         console.log(res);
-      })
-      
-
+      });
     },
     onClickLeft() {
-      this.$router.go(-1);
+      this.$router.push('/home');
     },
     onClickRight() {},
-    onSubmit() {},
+    onSubmit() {
+      const selectedGoods = this.result.map((index) => this.cartList[index]);
+      this.$router.push({
+        path: '/order',
+        query: {
+          goods: JSON.stringify(selectedGoods),
+          totalPrice: this.totalPrice,
+        },
+      });
+    },
     async getGoodsCart() {
-      await getGoodsCart().then((res) => {
-        this.cartList = res.data.data;
-        console.log(res);
-      }).catch(() => {});
+      await getGoodsCart()
+        .then((res) => {
+          this.cartList = res.data.data;
+          console.log(res);
+        })
+        .catch(() => {});
     },
     checkedAll() {
       if (this.checked) {

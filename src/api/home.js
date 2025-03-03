@@ -1,40 +1,41 @@
-import request from '@/utils/request'
+import request from '@/utils/request';
+import axios from 'axios';
 
 export function getHomeTab() {
   return request({
     url: '/index_list/0/data/1',
-    method: 'get'
-  })
+    method: 'get',
+  });
 }
 
 export function getShowGoods() {
   return request({
     url: '/goods/shopList',
-    method: 'get'
-  })
+    method: 'get',
+  });
 }
 
 export function login(data) {
   return request({
     url: '/login',
     method: 'post',
-    data
-  })
+    data,
+  });
 }
 
 export function addUser(data) {
   return request({
     url: '/register',
     method: 'post',
-    data
-  })
+    data,
+  });
 }
 
 export function getGoodsSearch(data) {
   return request({
     url: `/goods/search`,
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -49,9 +50,9 @@ export function addGoodsCart(data) {
   return request({
     url: `/addCart`,
     method: 'post',
-    data
-  })
-}         
+    data,
+  });
+}
 
 export function getGoodsCart() {
   return request({
@@ -64,7 +65,7 @@ export function deleteGoodsCart(data) {
   return request({
     url: `/deleteCart`,
     method: 'post',
-    data
+    data,
   });
 }
 
@@ -75,3 +76,32 @@ export function updateGoodsCart(data) {
     data,
   });
 }
+// 新增收货地址
+export function addAddress(data) {
+  return request({
+    url: `/addAddress`,
+    method: 'post',
+    data,
+  });
+}
+
+// 查询收货地址
+export function selectAddress() {
+  return request({
+    url: `/selectAddress`,
+    method: 'post',
+  });
+}
+// 编辑收货地址
+export function updateAddress(data) {
+  return request({
+    url: `/updateAddress`,
+    method: 'post',
+    data,
+  });
+}
+
+// 获取地址详情
+export const getAddressById = (params) => {
+  return axios.post('/api/getAddressById', params);
+};

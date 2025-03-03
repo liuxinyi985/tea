@@ -15,6 +15,7 @@
     <section>
       <van-cell title="地址列表" @click="goAddress"  is-link />
       <van-cell title="退出登录" @click="loginOut" is-link />
+      <van-cell title="我的订单" @click="goOrder" is-link />
     </section>
     <Tabbar></Tabbar>
   </div>
@@ -55,6 +56,9 @@ export default {
         .catch(() => {
           // on cancel
         });
+    },
+    goOrder() {
+      this.$router.push('/orderList');
     },
   },
 };
