@@ -188,6 +188,25 @@ export default {
         { label: '已取消', value: 4 }
       ],
       orderList: [
+        {
+          orderNo: '1234567890',
+          createTime: '2024-01-01 12:00:00',
+          goodsList: [
+            {
+              image: 'https://img.yzcdn.cn/vant/ipad.png',
+              name: '商品名称',
+              spec: '规格',
+              price: 100,
+              quantity: 1
+            }
+          ],
+          receiverName: '张三',
+          receiverPhone: '12345678901',
+          receiverAddress: '北京市海淀区',
+          totalAmount: 100,
+          paymentMethod: '微信支付',
+          status: 0
+        }
       ],
       selectedOrders: [],
       page: {

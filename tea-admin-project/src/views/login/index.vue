@@ -10,9 +10,9 @@
         <h3 class="title">茶叶商城管理系统</h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="user_name">
         <el-input
-          v-model="loginForm.username"
+          v-model="loginForm.user_name"
           placeholder="用户名"
           type="text"
           prefix-icon="el-icon-user"
@@ -52,11 +52,11 @@ export default {
   data() {
     return {
       loginForm: {
-        username: '',
+        user_name: '',
         password: '',
       },
       loginRules: {
-        username: [
+        user_name: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
         ],
         password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
@@ -70,7 +70,8 @@ export default {
         await this.$refs.loginForm.validate();
         this.loading = true;
         const res = await login(this.loginForm);
-        if (res.code === 200) {
+        if (res.code === 0) {
+          sessionStorage.setItem('token', res.data.token);
           this.$message.success('登录成功');
           this.$router.push('/');
         }

@@ -5,12 +5,12 @@
     </cardTitle>
     <div v-if="LoadingFlag" class="imgList">
       <div class="one" v-for="item in imgList" :key="item.id" @click="goDetail(item.id)">
-        <van-image width="185" height="150" :src="item.url" alt="">
+        <van-image width="185" height="150" :src="'http://' + item.goods_imgUrl" alt="">
           <template v-slot:loading>
             <van-loading type="spinner" size="20" /> </template
         ></van-image>
         <div class="introduce">
-          <span class="ellipsis" :title="item.title">{{ item.name }}</span>
+          <span class="ellipsis" :title="item.title">{{ item.goods_name }}</span>
           <span class="price">{{ item.price }}元</span>
         </div>
       </div>
@@ -69,7 +69,7 @@ export default {
   created() {
     this.LoadingFlag = false;
     getShowGoods().then((res) => {
-      this.imgList = res.data.slice(0, 4);
+      this.imgList = res.data.list.slice(0, 4);
     });
     this.LoadingFlag = true;
   },

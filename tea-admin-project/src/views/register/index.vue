@@ -9,10 +9,17 @@
       <div class="title-container">
         <h3 class="title">注册账号</h3>
       </div>
-
-      <el-form-item prop="username">
+     <el-form-item label="昵称" prop="nick_name">
         <el-input
-          v-model="registerForm.username"
+          v-model="registerForm.nick_name"
+          placeholder="昵称"
+          type="text"
+          prefix-icon="el-icon-user"
+        />
+      </el-form-item>
+      <el-form-item prop="user_name">
+        <el-input
+          v-model="registerForm.user_name"
           placeholder="用户名"
           type="text"
           prefix-icon="el-icon-user"
@@ -70,12 +77,14 @@ export default {
     }
     return {
       registerForm: {
-        username: '',
+        user_name: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        nick_name: '',
       },
       registerRules: {
-        username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+        nick_name: [{ required: true, message: '请输入昵称', trigger: 'blur' }],
+        user_name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
         password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
         confirmPassword: [
           { required: true, message: '请确认密码', trigger: 'blur' },
@@ -91,10 +100,12 @@ export default {
         await this.$refs.registerForm.validate()
         this.loading = true
         const res = await register({
-          username: this.registerForm.username,
-          password: this.registerForm.password
+          user_name: this.registerForm.user_name,
+          password: this.registerForm.password,
+          confirm_password: this.registerForm.confirmPassword,
+          nick_name: this.registerForm.nick_name,
         })
-        if (res.code === 200) {
+        if (res.code === 0) {
           this.$message.success('注册成功')
           this.$router.push('/login')
         }

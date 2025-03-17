@@ -87,13 +87,13 @@ const router = new VueRouter({
 });
 
 // 路由守卫
-// router.beforeEach((to, from, next) => {
-//   const token = localStorage.getItem('token');
-//   if (to.path !== '/login' && to.path !== '/register' && !token) {
-//     next('/login');
-//   } else {
-//     next();
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  const token = sessionStorage.getItem('token');
+  if (to.path !== '/login' && to.path !== '/register' && !token) {
+    next('/login');
+  } else {
+    next();
+  }
+});
 
 export default router;

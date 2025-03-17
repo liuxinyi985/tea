@@ -10,14 +10,19 @@ export function getHomeTab() {
 
 export function getShowGoods() {
   return request({
-    url: '/goods/shopList',
-    method: 'get',
+    url: '/goods/list',
+    method: 'post',
+    data: {
+      page: 1,
+      page_size: 100,
+      status:-1
+    },
   });
 }
 
 export function login(data) {
   return request({
-    url: '/login',
+    url: '/user/login',
     method: 'post',
     data,
   });
@@ -25,7 +30,7 @@ export function login(data) {
 
 export function addUser(data) {
   return request({
-    url: '/register',
+    url: '/user/register',
     method: 'post',
     data,
   });
@@ -41,14 +46,14 @@ export function getGoodsSearch(data) {
 
 export function getGoodsDetail(id) {
   return request({
-    url: `/shopGoods/${id}`,
+    url: `/goods/${id}`,
     method: 'get',
   });
 }
 
 export function addGoodsCart(data) {
   return request({
-    url: `/addCart`,
+    url: `/cart/add`,
     method: 'post',
     data,
   });
@@ -56,8 +61,8 @@ export function addGoodsCart(data) {
 
 export function getGoodsCart() {
   return request({
-    url: `/selectCart`,
-    method: 'post',
+    url: `/cart/list`,
+    method: 'get',
   });
 }
 
@@ -79,7 +84,7 @@ export function updateGoodsCart(data) {
 // 新增收货地址
 export function addAddress(data) {
   return request({
-    url: `/addAddress`,
+    url: `/address/add`,
     method: 'post',
     data,
   });
@@ -88,8 +93,8 @@ export function addAddress(data) {
 // 查询收货地址
 export function selectAddress() {
   return request({
-    url: `/selectAddress`,
-    method: 'post',
+    url: `/address/list`,
+    method: 'get',
   });
 }
 // 编辑收货地址

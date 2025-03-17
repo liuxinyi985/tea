@@ -81,7 +81,7 @@ export default {
     },
     async onSave(content) {
       try {
-        content.isDefault = content.isDefault ? 1 : 0;
+        content.isDefault = content.isDefault ? "1" : "0";
         const id = this.$route.query.id;
 
         if (id) {

@@ -21,9 +21,9 @@
         <van-icon @click="delGoods(item.id)" class="del_icon" name="delete-o" />
         <van-card
           :price="item.goods_price"
-          desc="描述信息"
+          :desc="item.goods_description"
           :title="item.goods_name"
-          :thumb="item.goods_imgUrl"
+          :thumb="'http://' +item.goods_url"
           width="100%"
         >
           <template #footer>
@@ -106,7 +106,7 @@ export default {
     async getGoodsCart() {
       await getGoodsCart()
         .then((res) => {
-          this.cartList = res.data.data;
+          this.cartList = res.data.list;
           console.log(res);
         })
         .catch(() => {});

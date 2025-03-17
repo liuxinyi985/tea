@@ -63,7 +63,7 @@ export default {
   left: 0;
   bottom: 0;
   height: 50px;
- z-index: 999;
+  z-index: 999;
   display: flex;
   align-items: center;
   background-color: #fff;

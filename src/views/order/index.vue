@@ -35,7 +35,7 @@
     <div class="product-list">
       <div class="product-item" v-for="item in orderGoods" :key="item.id">
         <div class="product-info">
-          <img :src="item.goods_imgUrl" :alt="item.goods_name" />
+          <img :src="'http://'+item.goods_url" :alt="item.goods_name" />
           <div class="product-detail">
             <p class="product-name">{{ item.goods_name }}</p>
             <p class="product-price">¥{{ item.goods_price }}</p>
@@ -117,7 +117,7 @@ export default {
     async getDefaultAddress() {
       const res = await selectAddress();
       console.log(res, 'res');
-      const addresses = res.data.data;
+      const addresses = res.data.list;
       // 找到默认地址
       const defaultAddr = addresses.find((addr) => addr.isDefault === '1');
       this.defaultAddress = defaultAddr || null;

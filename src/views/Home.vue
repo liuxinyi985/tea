@@ -2,7 +2,7 @@
   <div class="home">
     <search></search>
     <!-- //菜单栏 -->
-    <van-tabs v-model:active="active" @click="onClick">
+    <!-- <van-tabs v-model:active="active" @click="onClick">
       <van-tab v-for="item in tabList" :title="item.label">
         <div v-if="item.label !== '推荐'">
           <billBrand :brandId="brandId"></billBrand>
@@ -10,7 +10,7 @@
           <Tabbar></Tabbar>
         </div>
       </van-tab>
-    </van-tabs>
+    </van-tabs> -->
     <!-- 轮播图 -->
     <div v-show="flag">
       <van-swipe :autoplay="3000" lazy-render width="400" height="200">
@@ -67,7 +67,7 @@ export default {
     };
   },
   created() {
-    this.getHomeTab();
+    // this.getHomeTab();
   },
   methods: {
     // getData() {

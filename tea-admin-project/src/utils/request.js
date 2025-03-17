@@ -4,7 +4,7 @@ import axios from "axios";
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: "/api", // 设置基础URL，可以从环境变量中获取
+  baseURL: "/api", // 修改这里的端口号
   timeout: 5000, // 请求超时时间
 });
 
@@ -13,7 +13,8 @@ service.interceptors.request.use(
   config => {
     // 在发送请求之前做些什么
     // 例如：添加token
-    const token = localStorage.getItem('token');
+    // const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }

@@ -49,11 +49,11 @@ export default {
       const res = await selectAddress();
       console.log(res);
       // this.list = res.data.data;
-      this.list = res.data.data.map((item) => ({
+      this.list = res.data.list.map((item) => ({
         id: item.id,
         name: item.name,
-        tel: item.tel,
-        address: item.addressDetail,
+        tel: item.phone,
+        address: item.address,
         isDefault: item.isDefault === '0' ? false : true,
       }));
     },

@@ -6,8 +6,8 @@
       @click="goDetail"
       :price="item.price"
       :desc="item.description"
-      :title="item.name"
-      :thumb="item.url"
+      :title="item.goods_name"
+      :thumb="'http://' + item.goods_imgUrl"
     />
   </div>
 </template>
@@ -46,7 +46,7 @@ export default {
   },
   created() {
     getShowGoods().then((res) => {
-      this.cardList = res.data.slice(0, 4);
+      this.cardList = res.data.list.slice(0, 4);
     });
   },
 };
@@ -63,5 +63,6 @@ export default {
     height: 88px;
     margin-right: 8px;
   }
+  margin-bottom: 50px;
 }
 </style>

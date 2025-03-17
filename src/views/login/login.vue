@@ -135,11 +135,11 @@ export default {
       if (!isValid) {
         return;
       }
-      await login({ userTel: this.username, userPwd: this.password })
+      await login({ user_name: this.username, password: this.password })
         .then((res) => {
           console.log(res);
-          if (res.code === 200) {
-            this.userLogin(res.data[0]);
+          if (res.code === 0) {
+            this.userLogin(res.data);
             this.$router.push('/my');
           } else {
             this.$toast.fail('账号或密码错误');
@@ -151,11 +151,14 @@ export default {
     },
     async register() {
       await addUser({
-        userTel: this.registerForm.username,
-        userPwd: this.registerForm.password,
+        user_name: this.registerForm.username,
+        password: this.registerForm.password,
+        confirm_password: this.registerForm.passwordConfirm,
+        nick_name:'小明',
+        
       }).then((res) => {
         console.log(res);
-        if (res.code === 200) {
+        if (res.code === 0) {
           this.$toast.success('注册成功');
           this.showFlag = 0;
         } else {

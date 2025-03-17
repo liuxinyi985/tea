@@ -95,6 +95,16 @@ const routes = [
     name: 'OrderList',
     component: () => import('../views/order/orderList.vue'),
   },
+  {
+    path: '/orderDetail',
+    name: 'OrderDetail',
+    component: () => import('../views/order/detail.vue'),
+  },
+  {
+    path: '/orderDetail/:id',
+    name: 'OrderDetailById',
+    component: () => import('../views/order/detail.vue'),
+  }
 ];
 
 const router = new VueRouter({

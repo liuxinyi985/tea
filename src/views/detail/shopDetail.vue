@@ -7,7 +7,7 @@
 <van-icon class="right" name="chat-o" /> -->
         </div>
         <!-- <img v-lazy="image" /> -->
-         <van-image width="400" height="250" :src="image"  fit="fill" alt="">
+         <van-image width="400" height="250" :src="'http://' +image"  fit="fill" alt="">
           <template v-slot:loading>
             <van-loading type="spinner" size="20" /> </template
         ></van-image>
@@ -15,7 +15,7 @@
       </van-swipe-item>
     </van-swipe>
     <div class="title">
-      <h1>{{ shopInfo.name }} 珍稀{{ shopInfo.name }}100g</h1>
+      <h1>{{ shopInfo.goods_name }} 珍稀{{ shopInfo.goods_name }}100g</h1>
       <p>{{ shopInfo.description }}</p>
     </div>
     <div class="price">
@@ -63,10 +63,13 @@ export default {
     //  获取商品详情
     getGoodId() {
       getGoodsDetail(this.$route.query.id).then((res) => {
-        this.shopInfo = res.data[0];
-        this.images[0] = res.data[0].url;
+        this.shopInfo = res.data;
+        this.images[0] = res.data.goods_imgUrl;
         console.log(this.shopInfo);
-      });
+      }).catch((err) => {
+        
+      })
+      ;
     },
 
     onChange(index) {
@@ -84,7 +87,7 @@ export default {
       })
         .then(() => {
           addGoodsCart({
-            goodsId: this.$route.query.id,
+            goods_uuid: this.$route.query.id,
           }).then((res) => {
             Toast.success('添加成功');
           });
