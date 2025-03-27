@@ -12,7 +12,7 @@
       placeholder="请输入搜索关键词"
     >
     </van-search>
-    <div class="search-btn"  >搜索</div>
+    <div class="search-btn" @click="Search" >搜索</div>
   </div>
 </template>
 
@@ -33,6 +33,9 @@ export default {
   methods: {
     goBack() {
       this.$router.go(-1);
+    },
+    Search() {
+      this.onSearch(this.searchInput);
     },
     onSearch(val) {
       if (val.trim() === '') {

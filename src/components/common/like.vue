@@ -68,7 +68,11 @@ export default {
   },
   created() {
     this.LoadingFlag = false;
-    getShowGoods().then((res) => {
+    getShowGoods({
+      page: 1,
+      page_size: 100,
+      status: 1,
+    }).then((res) => {
       this.imgList = res.data.list.slice(0, 4);
     });
     this.LoadingFlag = true;

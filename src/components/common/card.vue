@@ -3,7 +3,7 @@
     <van-card
       v-for="(item, index) in cardList"
       :key="index"
-      @click="goDetail"
+      @click="goDetail(item.id)"
       :price="item.price"
       :desc="item.description"
       :title="item.goods_name"
@@ -40,13 +40,22 @@ export default {
     };
   },
   methods: {
-    goDetail() {
-      this.$router.push('/shopDetail');
+    goDetail(id) {
+      this.$router.push({
+        name: 'ShopDetail',
+        query: {
+          id,
+        },
+      });
     },
   },
   created() {
-    getShowGoods().then((res) => {
-      this.cardList = res.data.list.slice(0, 4);
+    getShowGoods({
+      page: 1,
+      page_size: 100,
+      status: 1,
+    }).then((res) => {
+      this.cardList = res.data.list.slice(4, 8);
     });
   },
 };

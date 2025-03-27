@@ -99,7 +99,7 @@ export default {
   data() {
     return {
       userName: '管理员',
-      userAvatar: '',
+      userAvatar: 'https://tse1-mm.cn.bing.net/th/id/OIP-C.D0E_hW4CZ4-zry2gwHTiwwAAAA?rs=1&pid=ImgDetMain',
       dailyTip: '一日之计在于晨，一日之茶在于早',
       currentSeason: {
         name: '春季',

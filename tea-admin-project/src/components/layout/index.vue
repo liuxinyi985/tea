@@ -9,7 +9,7 @@
         <div class="header-right">
           <el-dropdown trigger="click">
             <span class="avatar-wrapper">
-              <img src="http" class="user-avatar" />
+              <img src="https://tse1-mm.cn.bing.net/th/id/OIP-C.D0E_hW4CZ4-zry2gwHTiwwAAAA?rs=1&pid=ImgDetMain" width="25" height="25" class="user-avatar" />
               <i class="el-icon-caret-bottom" />
             </span>
             <el-dropdown-menu slot="dropdown">

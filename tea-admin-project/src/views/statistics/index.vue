@@ -48,6 +48,7 @@
 
 <script>
 import echarts from 'echarts';
+import { getStatistics } from '@/api/goods';
 
 export default {
   name: 'Statistics',
@@ -247,6 +248,9 @@ export default {
     },
   },
   mounted() {
+    getStatistics({ stat_type: 'year' }).then((res) => {
+      console.log(res);
+    });
     this.$nextTick(() => {
       this.initSalesChart();
       this.initCategoryChart();

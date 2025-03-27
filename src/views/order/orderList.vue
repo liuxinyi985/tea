@@ -26,8 +26,8 @@
     </van-sticky> -->
 
     <!-- 订单列表 -->
-    <van-pull-refresh 
-      v-model="refreshing" 
+    <van-pull-refresh
+      v-model="refreshing"
       @refresh="onRefresh"
       success-text="刷新成功"
       success-duration="1000"
@@ -47,17 +47,20 @@
               <span class="shop-name">茶叶商城</span>
               <van-icon name="arrow" />
             </div>
-            <van-tag 
-              :type="getStatusType(order.status)"
-              round
-            >{{ getStatusText(order.status) }}</van-tag>
+            <van-tag :type="getStatusType(order.status)" round>{{
+              getStatusText(order.status)
+            }}</van-tag>
           </div>
 
           <div class="goods-list" @click="goToDetail(order.id)">
-            <div class="goods-item" v-for="(goods, index) in order.goodsList" :key="index">
+            <div
+              class="goods-item"
+              v-for="(goods, index) in order.goodsList"
+              :key="index"
+            >
               <van-image
                 class="goods-img"
-                :src="goods.image"
+                :src="'http://' + goods.image"
                 fit="cover"
                 radius="8"
                 lazy-load
@@ -87,7 +90,9 @@
 
           <div class="order-footer">
             <div class="total-info">
-              <span class="total-quantity">共{{ getTotalQuantity(order.goodsList) }}件商品</span>
+              <span class="total-quantity"
+                >共{{ getTotalQuantity(order.goodsList) }}件商品</span
+              >
               <div class="total-amount">
                 <span>合计：</span>
                 <span class="price">¥{{ order.totalAmount.toFixed(2) }}</span>
@@ -95,46 +100,49 @@
             </div>
             <div class="order-actions">
               <template v-if="order.status === 0">
-                <van-button 
-                  size="small" 
-                  type="danger" 
+                <van-button
+                  size="small"
+                  type="danger"
                   round
                   @click="handlePay(order)"
-                >立即付款</van-button>
-                <van-button 
-                  size="small" 
-                  plain 
+                  >立即付款</van-button
+                >
+                <van-button
+                  size="small"
+                  plain
                   round
                   @click="handleCancel(order)"
-                >取消订单</van-button>
+                  >取消订单</van-button
+                >
               </template>
               <template v-if="order.status === 2">
-                <van-button 
-                  size="small" 
-                  type="primary" 
+                <van-button
+                  size="small"
+                  type="primary"
                   round
                   @click="handleConfirm(order)"
-                >确认收货</van-button>
-                <van-button 
-                  size="small" 
-                  plain 
+                  >确认收货</van-button
+                >
+                <van-button
+                  size="small"
+                  plain
                   round
                   @click="checkExpress(order)"
-                >查看物流</van-button>
+                  >查看物流</van-button
+                >
               </template>
               <template v-if="order.status === 3">
-                <van-button 
-                  size="small" 
-                  type="primary" 
-                  plain 
+                <!-- <van-button
+                  size="small"
+                  type="primary"
+                  plain
                   round
                   @click="handleBuyAgain(order)"
-                >再次购买</van-button>
-                <van-button 
-                  size="small" 
-                  round
-                  @click="handleDelete(order)"
-                >删除订单</van-button>
+                  >再次购买</van-button
+                > -->
+                <van-button size="small" round @click="handleDelete(order)"
+                  >删除订单</van-button
+                >
               </template>
             </div>
           </div>
@@ -143,10 +151,10 @@
     </van-pull-refresh>
 
     <!-- 物流弹窗 -->
-    <van-popup 
-      v-model="expressVisible" 
-      position="bottom" 
-      round 
+    <van-popup
+      v-model="expressVisible"
+      position="bottom"
+      round
       closeable
       close-icon="close"
       :style="{ height: '70%' }"
@@ -160,17 +168,20 @@
           </div>
           <div class="express-no">
             运单号：{{ currentExpress.no }}
-            <van-button size="mini" type="primary" plain round @click="copyExpressNo">
+            <van-button
+              size="mini"
+              type="primary"
+              plain
+              round
+              @click="copyExpressNo(currentExpress.no)"
+            >
               复制单号
             </van-button>
           </div>
         </div>
         <div class="express-content">
           <van-steps direction="vertical" :active="0">
-            <van-step 
-              v-for="(item, index) in expressInfo" 
-              :key="index"
-            >
+            <van-step v-for="(item, index) in expressInfo" :key="index">
               <h4>{{ item.content }}</h4>
               <p>{{ item.time }}</p>
             </van-step>
@@ -180,8 +191,8 @@
     </van-popup>
 
     <!-- 筛选弹窗 -->
-    <van-popup 
-      v-model="filterVisible" 
+    <van-popup
+      v-model="filterVisible"
       position="right"
       :style="{ width: '80%', height: '100%' }"
     >
@@ -191,12 +202,14 @@
 </template>
 
 <script>
+import { getOrderList, updateOrderStatus } from '@/api/home';
+import { Dialog, Toast } from 'vant';
 // script 部分基本保持不变，添加一些新的数据和方法
 export default {
   data() {
     return {
       // ... 原有的数据
-       activeTab: 'all',
+      activeTab: 'all',
       loading: false,
       finished: false,
       refreshing: false,
@@ -205,7 +218,7 @@ export default {
         unpaid: 2,
         unshipped: 1,
         shipped: 3,
-        completed: 5
+        completed: 5,
       },
       orderList: [],
       page: 1,
@@ -219,13 +232,13 @@ export default {
         { name: 'unpaid', title: '待付款' },
         { name: 'unshipped', title: '待发货' },
         { name: 'shipped', title: '待收货' },
-        { name: 'completed', title: '已完成' }
+        { name: 'completed', title: '已完成' },
       ],
       currentExpress: {
         company: '顺丰速运',
-        no: 'SF1234567890'
-      }
-    }
+        no: 'SF1234567890',
+      },
+    };
   },
   methods: {
     goBack() {
@@ -238,11 +251,11 @@ export default {
         1: 'primary',
         2: 'success',
         3: 'default',
-        4: 'danger'
-      }
-      return map[status]
+        4: 'danger',
+      };
+      return map[status];
     },
-    
+
     // 获取状态文本
     getStatusText(status) {
       const map = {
@@ -250,79 +263,105 @@ export default {
         1: '待发货',
         2: '已收货',
         3: '已完成',
-        4: '已取消'
-      }
-      return map[status]
+        4: '已取消',
+      };
+      return map[status];
     },
 
     // 计算商品总数
     getTotalQuantity(goodsList) {
-      return goodsList.reduce((total, goods) => total + goods.quantity, 0)
+      return goodsList.reduce((total, goods) => total + goods.quantity, 0);
     },
 
     // 加载数据
     async onLoad() {
-      try {
-        // 模拟接口请求
-        setTimeout(() => {
-          const newOrders = this.getMockOrders()
-          if (this.refreshing) {
-            this.orderList = newOrders
-            this.refreshing = false
-          } else {
-            this.orderList = [...this.orderList, ...newOrders]
-          }
-          this.loading = false
-          this.page++
-          if (this.page > 3) {
-            this.finished = true
-          }
-        }, 1000)
-      } catch (error) {
-        this.loading = false
-        Toast.fail('加载失败')
-      }
+      this.getMockOrders();
+      this.loading = false;
+      // try {
+      //   // 模拟接口请求
+      //   setTimeout(() => {
+      //     const newOrders = this.getMockOrders();
+      //     if (this.refreshing) {
+      //       this.orderList = newOrders;
+      //       this.refreshing = false;
+      //     } else {
+      //       this.orderList = [...this.orderList, ...newOrders];
+      //     }
+      //     this.loading = false;
+      //     this.page++;
+      //     if (this.page > 3) {
+      //       this.finished = true;
+      //     }
+      //   }, 1000);
+      // } catch (error) {
+      //   this.loading = false;
+      //   Toast.fail('加载失败');
+      // }
     },
 
     // 下拉刷新
     onRefresh() {
-      this.finished = false
-      this.loading = true
-      this.page = 1
-      this.onLoad()
+      this.finished = false;
+      this.loading = true;
+      this.page = 1;
+      this.onLoad();
     },
 
     // 切换标签
     handleTabChange(name) {
-      this.finished = false
-      this.page = 1
-      this.orderList = []
-      this.onLoad()
+      this.finished = false;
+      this.page = 1;
+      this.orderList = [];
+      this.onLoad();
     },
 
     // 跳转详情
     goToDetail(orderId) {
-      this.$router.push(`/order/detail/${orderId}`)
+      this.$router.push(`/order/detail/${orderId}`);
     },
 
     // 支付订单
-    handlePay(order) {
+    async handlePay(order) {
+      console.log('order', order);
+
+      await updateOrderStatus({
+        order_uuid: order.id,
+        status: 1,
+      }).then(() => {});
+      // 支付成功后更新订单状态
+      this.getMockOrders();
+      this.$toast.success('支付成功');
+
       // 处理支付逻辑
     },
 
     // 取消订单
-    handleCancel(order) {
+    async handleCancel(order) {
       // 处理取消逻辑
+      await updateOrderStatus({
+        order_uuid: order.id,
+        status: 4,
+      }).then(() => {
+        this.$toast.success('取消成功');
+        this.getMockOrders();
+      })
     },
 
     // 确认收货
-    handleConfirm(order) {
+    async handleConfirm(order) {
       // 处理确认收货逻辑
+      await updateOrderStatus({
+        order_uuid: order.id,
+        status: 3,
+      }).then(() => {
+        this.$toast.success('确认收货成功');
+        this.getMockOrders();
+      })
     },
 
     // 查看物流
     checkExpress(order) {
-      this.expressVisible = true
+      this.expressVisible = true;
       // 获取物流信息
     },
 
@@ -337,41 +376,56 @@ export default {
     },
 
     // 模拟订单数据
-    getMockOrders() {
-      return [
-        {
-          id: 1,
-          orderNo: 'DD20240101001',
-          status: 2,
-          createTime: '2024-01-01 10:00:00',
-          goodsList: [
-            {
-              image: 'https://example.com/tea1.jpg',
-              name: '特级铁观音',
-              spec: '250g/盒',
-              price: 168.00,
-              quantity: 2
-            }
-          ],
-          totalAmount: 336.00
-        },
-        // 更多订单数据...
-      ]
+    async getMockOrders() {
+      await getOrderList({
+        page: 1,
+        page_size: 100,
+        status: -1,
+      }).then((res) => {
+        console.log(res.data, '订单列表数据');
+        this.orderList = res.data.list;
+      });
+      // return [
+      //   {
+      //     id: 1,
+      //     orderNo: 'DD20240101001',
+      //     status: 2,
+      //     createTime: '2024-01-01 10:00:00',
+      //     goodsList: [
+      //       {
+      //         image: 'https://example.com/tea1.jpg',
+      //         name: '特级铁观音',
+      //         spec: '250g/盒',
+      //         price: 168.0,
+      //         quantity: 2,
+      //       },
+      //     ],
+      //     totalAmount: 336.0,
+      //   },
+      //   // 更多订单数据...
+      // ];
     },
     copyOrderNo(orderNo) {
       // 实现复制订单号
     },
     copyExpressNo() {
       // 实现复制快递单号
+      this.$copyText('快递单号').then(() => {
+        this.$toast.success('复制成功');
+      });
+    },
+    handleCopy(text) {
+      this.$copyText(text);
+      this.$toast.success('复制成功');
     },
     showFilter() {
-      this.filterVisible = true
+      this.filterVisible = true;
     },
     onSearch() {
       // 实现搜索功能
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -387,8 +441,6 @@ export default {
     right: 0;
     z-index: 999;
   }
-
- 
 
   .order-item {
     margin: 12px;
@@ -408,7 +460,7 @@ export default {
         display: flex;
         align-items: center;
         gap: 4px;
-        
+
         .shop-name {
           font-size: 14px;
           font-weight: 500;
@@ -502,7 +554,7 @@ export default {
 
         .total-amount {
           font-size: 14px;
-          
+
           .price {
             color: #ee0a24;
             font-size: 16px;

@@ -30,3 +30,30 @@ export function deleteGoods(id) {
     method: 'post',
   });
 }
+
+//数据统计
+export function getStatistics(data) {
+  return request({
+    url: '/api/order/statistic',
+    method: 'post',
+    data
+  });
+}
+
+//获取订单
+export function getOrderList(data) {
+  return request({
+    url: '/api/order/list',
+    method:'post',
+    data
+  });
+}
+
+//修改订单状态
+export function updateOrderStatus(data) {
+  return request({
+    url: '/api/order/status',
+    method: 'post',
+    data,
+  });
+}

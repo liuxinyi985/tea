@@ -55,7 +55,7 @@
       <el-table-column label="商品图片" width="100">
         <template slot-scope="scope">
           <el-image
-            :src="'https://' + scope.row.goods_imgUrl"
+            :src="'http://' + scope.row.goods_imgUrl"
             :preview-src-list="[scope.row.goods_imgUrl]"
             fit="cover"
             style="width: 50px; height: 50px"
@@ -155,7 +155,7 @@
           >
             <img
               v-if="goodsForm.goods_imgUrl"
-              :src="goodsForm.goods_imgUrl"
+              :src="'http://'+goodsForm.goods_imgUrl"
               class="avatar"
             />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>

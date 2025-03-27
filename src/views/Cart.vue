@@ -3,7 +3,6 @@
     <van-nav-bar
       title="购物车"
       left-text="返回"
-      right-text="编辑"
       left-arrow
       @click-left="onClickLeft"
       @click-right="onClickRight"
@@ -18,7 +17,7 @@
         class="cart_item"
         label-disabled
       >
-        <van-icon @click="delGoods(item.id)" class="del_icon" name="delete-o" />
+        <van-icon @click="delGoods(item.uuid)" class="del_icon" name="delete-o" />
         <van-card
           :price="item.goods_price"
           :desc="item.goods_description"
@@ -71,7 +70,7 @@ export default {
         message: '您确定要删除该商品吗？',
       })
         .then(() => {
-          deleteGoodsCart({ arrId: id })
+          deleteGoodsCart({ uuid: id })
             .then((res) => {
               this.getGoodsCart();
               Toast.success('删除成功');

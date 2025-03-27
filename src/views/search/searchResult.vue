@@ -1,7 +1,12 @@
 <template>
   <div class="content">
-    <header :searchContent="searchInput"></header>
     <div class="topTab">
+      <van-nav-bar
+        title="搜索结果"
+        left-text="返回"
+        left-arrow
+        @click-left="onClickLeft"
+      />
       <ul class="topTabList">
         <li
           class="price"
@@ -30,13 +35,14 @@
       :key="item.id"
       :price="item.price"
       :desc="item.description"
-      :title="item.name"
-      :thumb="item.url"
+      :title="item.goods_name"
+      :thumb="'http://' + item.goods_imgUrl"
       :lazy-load="true"
     >
-     
       <template #footer>
-        <van-button @click="onClickButton(item.id)" size="normal">加入购物车</van-button>
+        <van-button @click="onClickButton(item.id)" size="normal"
+          >加入购物车</van-button
+        >
       </template>
     </van-card>
     <van-empty description="商品已售罄" v-if="goodsList.length === 0" />
@@ -51,7 +57,7 @@ import { getHomeTab, getShowGoods } from '@/api/home';
 import { getGoodsSearch } from '@/api/home';
 import { getGoodsDetail, addGoodsCart } from '@/api/home';
 import { Lazyload } from 'vant';
-import { Dialog,Toast } from 'vant';
+import { Dialog, Toast } from 'vant';
 export default {
   data() {
     return {
@@ -82,31 +88,32 @@ export default {
   created() {
     this.searchInput = this.$route.query.search;
     console.log(this.searchInput, '我是搜索内容');
-    // this.getShowGoods();
-    this.getGoodsSearch();
-
+    this.getShowGoods();
+    // this.getGoodsSearch();
   },
   methods: {
+    onClickLeft() {
+      this.$router.go(-1);
+    },
     onClickButton(id) {
       Dialog.confirm({
         message: '您确定要加入购物车吗？',
       })
         .then(() => {
           addGoodsCart({
-            goodsId: id,
+            goods_uuid: id,
           }).then((res) => {
             Toast.success('添加成功');
           });
-        }).catch(() => {
-          
         })
+        .catch(() => {})
         .catch(() => {
           // on cancel
         });
     },
     //获取搜索列表
     async getGoodsSearch() {
-      await getGoodsSearch({keyword: this.searchInput}).then((res) => {
+      await getGoodsSearch({ keyword: this.searchInput }).then((res) => {
         this.goodsList = res.data;
         console.log(this.goodsList, '我是商品列表');
       });
@@ -124,12 +131,17 @@ export default {
         this.getGoodsSearch();
       }
     },
-    // async getShowGoods() {
-    //   await getShowGoods().then((res) => {
-    //     this.goodsList = res.data;
-    //     console.log(this.goodsList, '我是商品列表');
-    //   });
-    // },
+    async getShowGoods() {
+      await getShowGoods({
+        page: 1,
+        page_size: 100,
+        status: 1,
+        name: this.searchInput,
+      }).then((res) => {
+        this.goodsList = res.data.list;
+        console.log(this.goodsList, '我是商品列表');
+      });
+    },
   },
 };
 </script>

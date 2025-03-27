@@ -3,10 +3,14 @@ import App from './App.vue'
 import router from './router'
 import './assets/css/common.css'
 import 'vant/lib/index.css'
-import { Toast } from 'vant';
+import { Toast, Dialog } from 'vant';
 import { Lazyload } from 'vant';
 import { Swipe, SwipeItem } from 'vant';
 import store from "./store";
+
+
+
+Vue.use(Dialog);
 
 
 // 必须在创建 Vue 实例前注册

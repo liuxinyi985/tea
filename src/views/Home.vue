@@ -12,7 +12,7 @@
       </van-tab>
     </van-tabs> -->
     <!-- 轮播图 -->
-    <div v-show="flag">
+    <div class="content-home" v-show="flag">
       <van-swipe :autoplay="3000" lazy-render width="400" height="200">
         <van-swipe-item v-for="image in images" :key="image">
           <img :src="image" class="home-img" />
@@ -102,5 +102,17 @@ export default {
 .home-img {
   width: 100%;
   height: 100%;
+}
+.content-home {
+  height: calc(100vh - 50px);
+  margin-bottom: 50px; /* 添加底部内边距，防止内容被 Tabbar 遮挡 */
+}
+/* 添加以下样式 */
+:deep(.tabbar) {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
 }
 </style>

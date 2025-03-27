@@ -35,7 +35,7 @@
     <div class="product-list">
       <div class="product-item" v-for="item in orderGoods" :key="item.id">
         <div class="product-info">
-          <img :src="'http://'+item.goods_url" :alt="item.goods_name" />
+          <img :src="'http://' + item.goods_url" :alt="item.goods_name" />
           <div class="product-detail">
             <p class="product-name">{{ item.goods_name }}</p>
             <p class="product-price">¥{{ item.goods_price }}</p>
@@ -66,8 +66,8 @@
 </template>
 
 <script>
-import { selectAddress } from '@/api/home';
-
+import { selectAddress, addOrder,updateOrderStatus } from '@/api/home';
+import { Dialog, Toast } from 'vant';
 export default {
   name: 'OrderConfirm',
   data() {
@@ -76,6 +76,7 @@ export default {
       orderGoods: [],
       totalPrice: 0,
       defaultAddress: null,
+      order_uuid:null
     };
   },
   computed: {
@@ -100,6 +101,9 @@ export default {
       this.orderGoods = JSON.parse(goods);
       this.totalPrice = Number(this.$route.query.totalPrice);
     }
+    console.log(this.orderGoods, 'goods');
+    console.log(111);
+
     // 获取默认地址
     this.getDefaultAddress();
   },
@@ -108,10 +112,34 @@ export default {
       this.$router.back();
     },
     onSubmit() {
+      console.log(123);
+
       if (!this.defaultAddress) {
         this.$toast('请选择收货地址');
         return;
       }
+      addOrder({
+        address_uuid: this.defaultAddress.id,
+        cart_uuid: this.orderGoods.map((item) => item.uuid),
+      })
+        .then((res) => {
+          console.log(res, 'res');
+          this.order_uuid = res.data.id;
+
+        })
+        .catch((err) => {});
+      Dialog.confirm({
+        title: '订单提交',
+        message: '您确认要提交订单吗？提交后无法修改，请确认地址和商品信息无误',
+      })
+        .then(() => {
+          updateOrderStatus({ order_uuid: this.order_uuid, status: 1 }).then((res) => {});
+          Toast('订单提交成功');
+          // 确认回调
+        })
+        .catch(() => {
+          // 取消回调
+        });
       // 处理订单提交逻辑
     },
     async getDefaultAddress() {

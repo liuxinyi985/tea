@@ -8,15 +8,11 @@ export function getHomeTab() {
   });
 }
 
-export function getShowGoods() {
+export function getShowGoods(data) {
   return request({
     url: '/goods/list',
     method: 'post',
-    data: {
-      page: 1,
-      page_size: 100,
-      status:-1
-    },
+    data,
   });
 }
 
@@ -68,7 +64,7 @@ export function getGoodsCart() {
 
 export function deleteGoodsCart(data) {
   return request({
-    url: `/deleteCart`,
+    url: `/cart/delete`,
     method: 'post',
     data,
   });
@@ -110,3 +106,37 @@ export function updateAddress(data) {
 export const getAddressById = (params) => {
   return axios.post('/api/getAddressById', params);
 };
+
+//新增订单
+export const addOrder = (data) => {
+  return request({
+    url: `/order/create`,
+    method: 'post',
+    data,
+  });
+};
+//修改订单状态
+export function updateOrderStatus(data) {
+  return request({
+    url: '/order/status',
+    method: 'post',
+    data,
+  });
+}
+
+// 获取订单列表
+export function getOrderList(data) {
+  return request({
+    url: `/order/list`,
+    method: 'post',
+    data,
+  });
+}
+
+// 获取分类列表
+export function getCategoryList() {
+  return request({
+    url: `/goods/c_list`,
+    method: 'post',
+  });
+}

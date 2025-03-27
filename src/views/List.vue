@@ -51,9 +51,9 @@
             @click="goToList(sub.id)"
           >
             <div class="sub-category-content">
-              <van-image :src="sub.image" fit="cover" radius="8px" />
+              <van-image :src="'http://'+sub.image" fit="cover" radius="8px" />
               <span class="sub-name">{{ sub.name }}</span>
-              <span class="sub-desc">{{ sub.description }}</span>
+              <span class="sub-desc">{{ }}</span>
             </div>
           </div>
         </div>
@@ -91,6 +91,7 @@
 
 <script>
 import Tabbar from '../components/common/Tabbar.vue';
+import { getCategoryList } from '@/api/home';
 export default {
   name: 'List',
   components: {
@@ -169,6 +170,13 @@ export default {
       return this.categories[this.activeCategory] || {};
     },
   },
+  created() {
+    getCategoryList().then((res) => {
+      this.categories = res.data.categories;
+      console.log(res,'res');
+      
+  })
+  },
   methods: {
     onSearch() {
       // 搜索实现
@@ -177,7 +185,12 @@ export default {
       // 扫码实现
     },
     goToList(categoryId) {
-      this.$router.push(`/list?category=${categoryId}`);
+      this.$router.push({
+        name:'ShopDetail',
+        query: {
+          id: categoryId,
+        },
+      });
     },
     goToDetail(productId) {
       this.$router.push(`/detail/${productId}`);
